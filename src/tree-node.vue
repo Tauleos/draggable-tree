@@ -1,16 +1,20 @@
 <template>
-  <li @dragover.stop="onDragOver"
-      @drop.stop="onDrop">
-    <span class="fu fu-caret-up-a" v-if="nodeData.children" @click="onExpand"></span>
-    <span ref="selector" draggable @dragstart.stop="onDragStart"
-          @dragend.stop="onDragEnd">{{ nodeData.title }}</span>
+  <li @dragover.stop.prevent="onDragOver"
+      @dragenter.prevent.stop="onDragEnter"
+      @dragleave.stop="onDragLeave"
+      @drop.stop="onDrop"
+      :class="classes">
+    <span class="fu fu-caret-right-a" v-if="nodeData.children" @click="onExpand"></span>
+    <span ref="selector" :class="selectorClasses" draggable="true" @dragstart.stop="onDragStart"
+          @dragend.stop="onDragEnd" @click.stop="onSelect">{{ nodeData.title }}</span>
     <ul v-if="nodeData.children&&nodeData.children.length">
-      <tree-node v-for="child in nodeData.children" :key="child.title" :node-data="child"></tree-node>
+      <tree-node v-for="child in nodeData.children" :key="child.key" :node-data="child"></tree-node>
     </ul>
   </li>
 
 </template>
 <script>
+  import commMixin from './mixin/communicate';
   import '../css/index.scss';
   export default {
     name: 'tree-node',
@@ -18,22 +22,14 @@
       nodeData: {
         required: true,
         type: Object,
-        default() {
-          return {
-            _id: null,
-            title: '', //显示的标题
-            isExpand: true, //是否展开
-            noDrag: false, //此节点禁用拖拽
-            noDrop: false, //此节点禁用放置
-            children: [], //子项
-          };
-        },
       },
     },
+    mixins: [commMixin],
     components: {},
     data() {
       return {
         tree: null,
+        prefixCls: 'draggable-tree',
       };
     },
     created() {
@@ -43,36 +39,64 @@
       } else {
         this.tree = parent.tree;
       }
-      this.nodeData._id = this.generateId();
+    },
+    computed: {
+      selectorClasses () {
+        const {
+          prefixCls, isDisabled, nodeState, draggable, nodeData: { isSelected },
+        } = this;
+        const wrapCls = `${ prefixCls }-node-content-wrapper`;
+      
+        return {
+          [wrapCls]: true,
+          [`${ wrapCls }-${ nodeState || 'normal' }`]: true,
+          [`${ prefixCls }-node-selected`]: !isDisabled && isSelected,
+          draggable: !isDisabled && draggable,
+        };
+      },
+      classes () {
+        const {
+          nodeData: {
+            dragOverGap,
+          },
+          isDisabled,
+        } = this;
+        console.log('dragOverGap=', dragOverGap);
+        return {
+          'drag-over': !isDisabled && dragOverGap === 'mid',
+          'drag-over-gap-top': !isDisabled && dragOverGap === 'top',
+          'drag-over-gap-bottom': !isDisabled && dragOverGap === 'bottom',
+        };
+      },
     },
     methods: {
-      onExpand() {},
-      onDragOver(e) {
-        this.tree.$emit('tree-node-drag-over', e, this);
-        event.preventDefault();
+      onSelect () {
+        console.log('on  click')
+        this.nodeData.isSelected = true;
       },
-      onDrop(e) {
-        this.tree.$emit('tree-node-drop', e, this);
+      onExpand() {},
+      onDragEnter(e){
         e.preventDefault();
       },
+      onDragOver(e) {
+        this.onNodeDragOver(e, this);
+      },
+      onDragLeave(e) {
+        this.onNodeDragLeave(e, this);
+      },
+      onDrop(e) {
+//        console.log('drop',e);
+        this.onNodeDrop(e, this);
+      },
       onDragStart(e) {
-        this.tree.$emit('tree-node-drag-start', e, this);
+        this.onNodeDragStart(e, this);
       },
       onDragEnd(e) {
-        this.tree.$emit('tree-node-drag-end', e, this);
-      },
-      generateId() {
-        return Math.random().toString(36).substring(2);
-      },
+        console.log('onDrag end');
+        this.onNodeDragEnd(e, this);
+      }
       
     },
   };
 </script>
-<style scoped>
-  .dragArea {
-    width: 200px;
-    margin: auto;
-    min-height: 50px;
-    outline: 1px dashed;
-  }
-</style>
+<style scoped></style>

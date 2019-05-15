@@ -2,15 +2,18 @@ $font-family: 'Chinese Quote', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'P
 $font-size-base: 12px !default;
 $line-height-base: 1.5 !default;
 $text-color: fade(#000, 65%) !default;
-$iconfont-css-prefix: fu !default;
-$icon-url: './fonts/uxcool' !default;
+$primary-color: #1b85ff !default;
+$primary-1: #e8f7ff !default;
+$primary-2: #bfe6ff !default;
 @import "iconfont";
 
-$tree-prefix: draggable-tree;
+$tree-prefix-cls: draggable-tree;
 $tree-title-height: 24px;
 $tree-child-padding: 18px;
+$border-radius-sm: 2px !default;
+$item-hover-bg: $primary-1 !default;
 
-.#{$tree-prefix} {
+.#{$tree-prefix-cls} {
   font-family: $font-family;
   font-size: $font-size-base;
   line-height: $line-height-base;
@@ -34,7 +37,7 @@ $tree-child-padding: 18px;
     white-space: nowrap;
     outline: 0;
 
-    span[draggable] {
+    span[draggable="true"] {
       user-select: none;
       border-top: 2px transparent solid;
       border-bottom: 2px transparent solid;
@@ -43,6 +46,48 @@ $tree-child-padding: 18px;
       -webkit-user-drag: element;
 
       line-height: $tree-title-height - 4px;
+    }
+
+    &.drag-over {
+      > span[draggable="true"] {
+        background-color: $primary-color;
+        color: white;
+        opacity: 0.8;
+      }
+    }
+
+    &.drag-over-gap-top {
+      > span[draggable="true"] {
+        border-top-color: $primary-color;
+      }
+    }
+
+    &.drag-over-gap-bottom {
+      > span[draggable="true"] {
+        border-bottom-color: $primary-color;
+      }
+    }
+
+    .#{$tree-prefix-cls}-node-content-wrapper {
+      display: inline-block;
+      padding: 0 5px;
+      border-radius: $border-radius-sm;
+      margin: 0;
+      cursor: move;
+      text-decoration: none;
+      vertical-align: top;
+      color: $text-color;
+      transition: all 0.3s;
+      height: $tree-title-height;
+      line-height: $tree-title-height;
+
+      &:hover {
+        background-color: $item-hover-bg;
+      }
+
+      &.#{$tree-prefix-cls}-node-selected {
+        background-color: $primary-2;
+      }
     }
   }
 }

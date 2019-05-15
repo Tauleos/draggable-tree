@@ -1,14 +1,21 @@
 <template>
   <ul class="draggable-tree">
-    <tree-Node v-for="item in list" :key="item.title" :node-data="item"></tree-Node>
+    <tree-Node v-for="item in nodes" :key="item.key" :node-data="item"></tree-Node>
   </ul>
 </template>
 <script>
   import treeNode from './tree-node.vue';
   import { calcDragOverGap } from './utils';
+  import storeMixin from './mixin/store';
   
   export default {
     name: 'draggable-tree',
+    mixins:[storeMixin],
+    provide() {
+      return {
+        treeRoot: this,
+      };
+    },
     model: {
       prop: 'list',
     },
@@ -31,80 +38,79 @@
           dropPosition: '',
           dragNode: null,
         },
+        nodes:[]
       };
     },
     created() {
-      this.$on('tree-node-drag-start', this.onNodeDragStart);
-      this.$on('tree-node-drag-over', this.onNodeDragOver);
-      this.$on('tree-node-drag-end', this.onNodeDragEnd);
-      this.$on('tree-node-drop', this.onNodeDrop);
+      this.nodes = this.createNodes(this.list, null, 0);
     },
     methods: {
       onNodeDragOver(e, treeNode) {
+        this.clearDragOverGap(treeNode);
         this.dragState.dropPosition = calcDragOverGap(event, treeNode.$refs.selector);
+        treeNode.nodeData.dragOverGap = this.dragState.dropPosition;
       },
-      onNodeDrop(event, treeNode) {
-        console.log('drop');
+      onNodeDrop(event, dropNode) {
         let that = this;
+        let treeData = this.nodes.map(v=>v); //目测是浅拷贝
         let { dragNode, dropPosition } = this.dragState;
         let { nodeData: dragData } = dragNode;
         //let dragData = this.dragState.dragNode.nodeData;
-        let dragParent = dragNode.$parent.nodeData;
-        if (!dragParent) {
-          Object.defineProperty(dragParent = {}, 'children', {
+        let dragParentData = dragNode.nodeData.parent;
+        if (!dragParentData) {
+          Object.defineProperty(dragParentData = {}, 'children', {
             get: function() {
-              debugger;
-              return that.list;
+              return treeData;
             },
-            set: function(child) {
-              console.log(child);
-              that.list.children = child;
+            set: function(childs) {
+              debugger;
+              treeData = childs;
             },
           });
         }
-        let dropData = treeNode.nodeData;
-        let dropParent = treeNode.$parent.nodeData;
-        if (!dropParent) {
-          Object.defineProperty(dropParent = {}, 'children', {
+        let dropData = dropNode.nodeData;
+        let dropParentData = dropData.parent;
+        if (!dropParentData) {
+          Object.defineProperty(dropParentData = {}, 'children', {
             get: function() {
-              debugger;
-              return that.list;
+              return treeData;
             },
-            set: function(child) {
-              console.log(child);
-              that.list.children = child;
+            set: function(childs) {
+              debugger;
+              treeData = childs;
             },
           });
         }
         
-        if (dragData._id !== dropData._id) {
+        if (dragData.key !== dropData.key) {
           debugger;
           //把拖拽元素从父节点中删除
-          dragParent.children.splice(dragParent.children.indexOf(dragData), 1);
+          this.removeChildren(dragParentData,dragData);
           if (dropPosition === 'mid') {
-            dropData.children ?
-              dropData.children.push(dragData)
-              : ( this.$set(dropData, 'children', [dragData]) );
+            this.addChildren(dropData,dragData);
           } else {
+            let index = dropParentData.children.indexOf(dropData);
+            this.setChildren(dropParentData,dragData,dropPosition === 'top' ? index:index+1)
             
-            let index = dropParent.children.indexOf(dropData);
-            if (dropPosition === 'top') {
-              dropParent.children.splice(index, 0, dragData);
-            } else {
-              dropParent.children.splice(index + 1, 0, dragData);
-            }
           }
         }
+        this.nodes = this.createNodes(treeData,null,0,'drop');
+        //TODO 开放drop事件
         
       },
       onNodeDragStart(event, treeNode) {
-        console.log('drag start', treeNode);
         this.dragState.dragNode = treeNode;
       },
       onNodeDragEnd(evt) {
         this.dragState.dragNode = null;
         this.dragState.dropPosition = '';
       },
+      onNodeDragLeave(e, treeNode) {
+        this.clearDragOverGap(treeNode);
+      },
+      clearDragOverGap(treeNode){
+        treeNode.nodeData.dragOverGap = 'none';
+      }
       
     },
     
