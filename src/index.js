@@ -1,6 +1,6 @@
-import Tree from './draggable-tree.vue';
+import draggableTree from './draggable-tree.vue';
 
-Tree.install = function install(Vue) {
-  Vue.component(Tree.name, Tree);
+draggableTree.install = function install(Vue) {
+  Vue.component(draggableTree.name, draggableTree);
 };
-export default Tree;
+export default draggableTree;

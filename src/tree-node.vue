@@ -5,7 +5,7 @@
     <span ref="selector" draggable="true" @dragstart.stop="onDragStart"
           @dragend.stop="onDragEnd">{{ nodeData.title }}</span>
     <ul v-if="nodeData.children&&nodeData.children.length">
-      <tree-node v-for="child in nodeData.children" :node-data="child"></tree-node>
+      <tree-node v-for="child in nodeData.children" :key="child.title" :node-data="child"></tree-node>
     </ul>
   </li>
 

@@ -2,7 +2,7 @@
   'object' == typeof exports && 'object' == typeof module
     ? module.exports = t()
     : 'function' == typeof define && define.amd ? define([], t) : 'object' ==
-    typeof exports ? exports.draggable = t() : e.draggable = t();
+    typeof exports ? exports.draggableTree = t() : e.draggableTree = t();
 }(window, function () {
   return function (e) {
     var t = {};
@@ -158,7 +158,7 @@
         }
         if (p) {
           var o = d++;
-          r = s || ( s = v() ), t = y.bind(null, r, o, !1), n = y.bind(null, r,
+          r = s || ( s = v() ), t = b.bind(null, r, o, !1), n = b.bind(null, r,
             o, !0);
         } else r = v(), t = function (e, t) {
           var n = t.css, r = t.media, o = t.sourceMap;
@@ -181,14 +181,14 @@
         };
       }
       
-      var _, b = ( _ = [], function (e, t) {
-        return _[e] = t, _.filter(Boolean).
+      var y, _ = ( y = [], function (e, t) {
+        return y[e] = t, y.filter(Boolean).
           join('\n');
       } );
       
-      function y (e, t, n, r) {
+      function b (e, t, n, r) {
         var o = n ? '' : r.css;
-        if (e.styleSheet) e.styleSheet.cssText = b(t, o); else {
+        if (e.styleSheet) e.styleSheet.cssText = _(t, o); else {
           var i = document.createTextNode(o), a = e.childNodes;
           a[t] && e.removeChild(a[t]), a.length
             ? e.insertBefore(i, a[t])
@@ -256,7 +256,7 @@
           e._v(' '),
           e.nodeData.children && e.nodeData.children.length ? n('ul',
             e._l(e.nodeData.children, function (e) {
-              return n('tree-node', { attrs: { 'node-data': e } });
+              return n('tree-node', { key: e.title, attrs: { 'node-data': e } });
             }), 1) : e._e()]);
       };
       o._withStripped = !0;

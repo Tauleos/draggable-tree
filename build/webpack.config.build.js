@@ -1,0 +1,16 @@
+const path = require('path');
+const merge = require('webpack-merge');
+const webpackBaseConfig = require('./webpack.config.base.js');
+const rimraf = require('rimraf');
+rimraf.sync(path.resolve(__dirname,'../dist'));
+module.exports = merge(webpackBaseConfig, {
+  output: {
+    library: 'draggableTree',
+    libraryTarget: 'umd',
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
+  },
+});
