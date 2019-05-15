@@ -1,5 +1,5 @@
 <template>
-  <ul class="ux-tree">
+  <ul class="draggable-tree">
     <tree-Node v-for="item in list" :key="item.title" :node-data="item"></tree-Node>
   </ul>
 </template>
@@ -9,10 +9,17 @@
   
   export default {
     name: 'draggable-tree',
+    model: {
+      prop: 'list',
+    },
     props: {
       list: {
         required: true,
         type: Array,
+      },
+      defaultExpandAll: {
+        type: Boolean,
+        default: true,
       },
     },
     components: { treeNode },
@@ -103,11 +110,4 @@
     
   };
 </script>
-<style scoped>
-  .dragArea {
-    width: 200px;
-    margin: auto;
-    min-height: 50px;
-    outline: 1px dashed;
-  }
-</style>
+<style scoped></style>

@@ -5,6 +5,8 @@
 const path = require('path');
 const merge = require('webpack-merge');
 const webpackBaseConfig = require('./webpack.config.base.js');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+//const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = merge(webpackBaseConfig, {
   // 入口
@@ -21,7 +23,6 @@ module.exports = merge(webpackBaseConfig, {
   },
   resolve: {
     alias: {
-      draggableTree: '../src/index',
       vue: 'vue/dist/vue.js',
     },
   },
@@ -37,5 +38,6 @@ module.exports = merge(webpackBaseConfig, {
       filename: 'index.html',
       template: path.join(__dirname, '../example/index.html'),
     }),
+//    new BundleAnalyzerPlugin()
   ],
 });

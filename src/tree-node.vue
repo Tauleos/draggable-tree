@@ -1,8 +1,8 @@
 <template>
   <li @dragover.stop="onDragOver"
       @drop.stop="onDrop">
-    <span class="ux-tree-switcher" v-if="nodeData.children" @click="onExpand"></span>
-    <span ref="selector" draggable="true" @dragstart.stop="onDragStart"
+    <span class="fu fu-caret-up-a" v-if="nodeData.children" @click="onExpand"></span>
+    <span ref="selector" draggable @dragstart.stop="onDragStart"
           @dragend.stop="onDragEnd">{{ nodeData.title }}</span>
     <ul v-if="nodeData.children&&nodeData.children.length">
       <tree-node v-for="child in nodeData.children" :key="child.title" :node-data="child"></tree-node>
@@ -11,7 +11,7 @@
 
 </template>
 <script>
-  
+  import '../css/index.scss';
   export default {
     name: 'tree-node',
     props: {

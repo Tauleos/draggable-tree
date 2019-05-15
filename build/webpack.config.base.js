@@ -10,9 +10,6 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.vue$/,
-        loader: 'vue-loader',
-      }, {
         test: /\.js$/,
         loader: 'babel-loader',
         options: {
@@ -22,8 +19,32 @@ module.exports = {
         exclude: /node-modules/,
       },
       {
+        test: /\.vue$/,
+        loader: 'vue-loader',
+      },
+      {
         test: /\.css$/,
-        use: ['vue-style-loader', 'css-loader'],
+        use: [
+          'vue-style-loader',
+          'css-loader',
+        ],
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          'vue-style-loader', // 将 JS 字符串生成为 style 节点
+          'css-loader', // 将 CSS 转化成 CommonJS 模块
+          'sass-loader', // 将 Sass 编译成 CSS
+        ],
+  
+      },
+      {
+        test: /\.(woff2?|eot|ttf|otf|svg)(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 8192,
+          name: 'static/fonts/[name].[hash:7].[ext]',
+        },
       },
     ],
   },
