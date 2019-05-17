@@ -6,9 +6,10 @@ const path = require('path');
 const merge = require('webpack-merge');
 const webpackBaseConfig = require('./webpack.config.base.js');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-//const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = merge(webpackBaseConfig, {
+  mode:'development',
   // 入口
   entry: {
     main: './example/index',
@@ -21,11 +22,7 @@ module.exports = merge(webpackBaseConfig, {
     filename: '[name].js',
     chunkFilename: '[name].chunk.js',
   },
-  resolve: {
-    alias: {
-      vue: 'vue/dist/vue.js',
-    },
-  },
+  resolve: {},
   optimization: {
     splitChunks: {
       chunks: 'all',
@@ -38,6 +35,6 @@ module.exports = merge(webpackBaseConfig, {
       filename: 'index.html',
       template: path.join(__dirname, '../example/index.html'),
     }),
-//    new BundleAnalyzerPlugin()
+    new BundleAnalyzerPlugin()
   ],
 });

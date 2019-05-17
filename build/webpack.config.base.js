@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 module.exports = {
   mode:'production',
@@ -14,13 +15,14 @@ module.exports = {
         loader: 'babel-loader',
         options: {
           presets: ['@babel/preset-env'],
-          plugins: [],
+          plugins: ['transform-vue-jsx'],
         },
         exclude: /node-modules/,
       },
       {
         test: /\.vue$/,
         loader: 'vue-loader',
+        exclude: /node_modules/
       },
       {
         test: /\.css$/,
