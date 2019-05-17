@@ -28,30 +28,50 @@
         type: Boolean,
         default: true,
       },
+      renderContent: {
+        type: Function,
+      },
     },
     components: { treeNode },
     data() {
       return {
-        isTree: true,
         dragState: {
           dragOverNode: null,
           dropPosition: '',
           dragNode: null,
         },
-        nodes:[]
+        nodes: [],
+        treeStore: {},
       };
     },
     created() {
-      this.nodes = this.createNodes(this.list, null, 0);
+      this.nodes = this.normalizeNode(this.list, null, 0);
+    },
+    computed: {
+      getSlots () {
+        console.log(this.$slots, this.$scopedSlots);
+        return this.$slots;
+      },
     },
     methods: {
+      onNodeSelect (e, nodeData) {
+        this.updateStoreSelectedKeys(nodeData.key, 'add');
+        this.$emit('select', nodeData.originNode);
+      },
+      onNodeExpand (e, nodeData) {
+        let { key, isExpanded } = nodeData;
+        this.updateStoreExpandedKeys(key, isExpanded ? 'add' : 'del');
+        this.$emit('expand', this.getStoreExpandedKeys(), {
+          expanded: isExpanded,
+          domEvent: e,
+        });
+      },
       onNodeDragOver(e, treeNode) {
         this.clearDragOverGap(treeNode);
         this.dragState.dropPosition = calcDragOverGap(event, treeNode.$refs.selector);
         treeNode.nodeData.dragOverGap = this.dragState.dropPosition;
       },
       onNodeDrop(event, dropNode) {
-        let that = this;
         let treeData = this.nodes.map(v=>v); //目测是浅拷贝
         let { dragNode, dropPosition } = this.dragState;
         let { nodeData: dragData } = dragNode;
@@ -94,8 +114,13 @@
             
           }
         }
-        this.nodes = this.createNodes(treeData,null,0,'drop');
-        //TODO 开放drop事件
+        this.nodes = this.normalizeNode(treeData, null);
+        this.$emit('drop', {
+          dragNode: dragData.originNode,
+          dragNodeParent: dragData.parent,
+          dropNode: dropData.originNode,
+          dropNodeParent: dropData.parent,
+        });
         
       },
       onNodeDragStart(event, treeNode) {

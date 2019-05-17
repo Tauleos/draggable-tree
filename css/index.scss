@@ -5,7 +5,7 @@ $text-color: fade(#000, 65%) !default;
 $primary-color: #1b85ff !default;
 $primary-1: #e8f7ff !default;
 $primary-2: #bfe6ff !default;
-@import "iconfont";
+@import 'mixin';
 
 $tree-prefix-cls: draggable-tree;
 $tree-title-height: 24px;
@@ -36,6 +36,11 @@ $item-hover-bg: $primary-1 !default;
     list-style: none;
     white-space: nowrap;
     outline: 0;
+
+    ul {
+      margin: 0;
+      padding: 0 0 0 $tree-child-padding;
+    }
 
     span[draggable="true"] {
       user-select: none;
@@ -80,6 +85,7 @@ $item-hover-bg: $primary-1 !default;
       transition: all 0.3s;
       height: $tree-title-height;
       line-height: $tree-title-height;
+      width: calc(100% - 24px);
 
       &:hover {
         background-color: $item-hover-bg;
@@ -88,6 +94,55 @@ $item-hover-bg: $primary-1 !default;
       &.#{$tree-prefix-cls}-node-selected {
         background-color: $primary-2;
       }
+    }
+
+    span {
+      &.#{$tree-prefix-cls}-switcher {
+        margin: 0;
+        width: 24px;
+        height: 24px;
+        line-height: $tree-title-height;
+        display: inline-block;
+        vertical-align: top;
+        border: 0 none;
+        cursor: pointer;
+        outline: none;
+        text-align: center;
+        position: relative;
+
+        &.#{$tree-prefix-cls}-switcher-noop {
+          cursor: default;
+        }
+
+        &.#{$tree-prefix-cls}-switcher_open {
+          @include uxTreeSwitcherIcon();
+        }
+
+        &.#{$tree-prefix-cls}-switcher_close {
+          @include uxTreeSwitcherIcon();
+
+          &:after {
+            transform: rotate(270deg) scale(0.59);
+          }
+        }
+      }
+    }
+
+  }
+
+  > li {
+    &:first-child {
+      padding-top: 7px;
+    }
+
+    &:last-child {
+      padding-bottom: 7px;
+    }
+  }
+
+  .c-move {
+    &-enter-active,&-leave-active {
+      transition: all .3s ease-in-out;
     }
   }
 }

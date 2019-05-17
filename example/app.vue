@@ -1,6 +1,8 @@
 <template>
   <div class="app">
-    <draggable-tree :list="list"></draggable-tree>
+    <draggable-tree :list="list" :renderContent="renderContent">
+<!--      <span slot="renderContent" slot-scope="{node}">testrenderContent</span>-->
+    </draggable-tree>
   </div>
 </template>
 
@@ -49,6 +51,21 @@
         }],
       };
     },
+    methods:{
+      renderContent({ node }) {
+        console.log(node);
+        const { isShow } = this;
+        return isShow ? (
+          <span>
+            <ux-icon type="blub" /> {node.title}-level-2222-{node.level}
+          </span>
+        ) : (
+          <span style="color: green">
+            {node.title}-level-333-{node.level}
+          </span>
+        );
+      },
+    }
   };
 </script>
 

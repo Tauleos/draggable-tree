@@ -1,0 +1,23 @@
+
+
+@mixin iconfont-size-under-12px($size, $rotate: 0deg) {
+  display: inline-block;
+  $font-scale: ($size / 12px);
+  font-size: 12px; // ie8-9
+  font-size: '#{$size}/9'; // lesshint duplicateProperty: false
+  //border-left: '#{$size}/9' solid;
+  border-left: $size solid transparent;
+  border-top: $size solid;
+  border-right: $size solid transparent;
+  transform: scale($font-scale) rotate($rotate);
+}
+
+@mixin uxTreeSwitcherIcon() {
+  &:after {
+    content: '';
+    @include iconfont-size-under-12px(7px);
+    display: inline-block;
+    font-weight: bold;
+    transition: transform 0.3s;
+  }
+}

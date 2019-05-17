@@ -4,17 +4,21 @@
       @dragleave.stop="onDragLeave"
       @drop.stop="onDrop"
       :class="classes">
-    <span class="fu fu-caret-right-a" v-if="nodeData.children" @click="onExpand"></span>
+    <span :class="switcherClasses" @click="onExpand"></span>
     <span ref="selector" :class="selectorClasses" draggable="true" @dragstart.stop="onDragStart"
-          @dragend.stop="onDragEnd" @click.stop="onSelect">{{ nodeData.title }}</span>
-    <ul v-if="nodeData.children&&nodeData.children.length">
-      <tree-node v-for="child in nodeData.children" :key="child.key" :node-data="child"></tree-node>
-    </ul>
+          @dragend.stop="onDragEnd" @click.stop="onSelect">
+      <node-content :node="nodeData"/>
+      </span>
+    <c-transition>
+      <ul v-show="nodeData.isExpanded && nodeData.children&&nodeData.children.length" style="overflow: hidden">
+        <tree-node v-for="child in nodeData.children" :key="child.key" :node-data="child"></tree-node>
+      </ul>
+    </c-transition>
   </li>
 
 </template>
 <script>
-  import commMixin from './mixin/communicate';
+  import cTransition from './c-transition.vue';
   import '../css/index.scss';
   export default {
     name: 'tree-node',
@@ -24,23 +28,55 @@
         type: Object,
       },
     },
-    mixins: [commMixin],
-    components: {},
+    inject: {
+      treeRoot: {
+        default: false,
+      },
+    },
+    components: {
+      cTransition,
+      nodeContent: {
+        props: {
+          node: {
+            required: true,
+          },
+        },
+        render (h) {
+          const parent = this.$parent;
+          const { treeRoot } = parent;
+          const { node } = this;
+          const { originNode } = node;
+          return (
+            treeRoot.renderContent
+              ? treeRoot.renderContent({ node:originNode })
+              : treeRoot.$scopedSlots.renderContent
+              ? treeRoot.$scopedSlots.renderContent({ node:originNode })
+              : <span class="draggable-tree-title">{ node.title }</span>
+          );
+        },
+      },
+    },
+    
     data() {
       return {
-        tree: null,
         prefixCls: 'draggable-tree',
       };
     },
-    created() {
-      const parent = this.$parent;
-      if (parent.isTree) {
-        this.tree = parent;
-      } else {
-        this.tree = parent.tree;
-      }
-    },
     computed: {
+      switcherClasses () {
+        const {
+          prefixCls, nodeData: { isExpanded, isParent },
+        } = this;
+        if (!isParent) {
+          return {
+            [`${ prefixCls }-switcher ${ prefixCls }-switcher-noop`]: true,
+          };
+        }
+        return {
+          [`${ prefixCls }-switcher`]: true,
+          [`${ prefixCls }-switcher_${ isExpanded ? 'open' : 'close' }`]: true,
+        };
+      },
       selectorClasses () {
         const {
           prefixCls, isDisabled, nodeState, draggable, nodeData: { isSelected },
@@ -61,7 +97,6 @@
           },
           isDisabled,
         } = this;
-        console.log('dragOverGap=', dragOverGap);
         return {
           'drag-over': !isDisabled && dragOverGap === 'mid',
           'drag-over-gap-top': !isDisabled && dragOverGap === 'top',
@@ -70,33 +105,34 @@
       },
     },
     methods: {
-      onSelect () {
-        console.log('on  click')
+      onSelect (e) {
         this.nodeData.isSelected = true;
+        this.treeRoot.onNodeSelect(e, this.nodeData);
       },
-      onExpand() {},
+      onExpand (e) {
+        this.nodeData.isExpanded = !this.nodeData.isExpanded;
+        this.treeRoot.onNodeExpand(e, this.nodeData);
+      },
       onDragEnter(e){
         e.preventDefault();
       },
       onDragOver(e) {
-        this.onNodeDragOver(e, this);
+        this.treeRoot.onNodeDragOver(e, this);
       },
       onDragLeave(e) {
-        this.onNodeDragLeave(e, this);
+        this.treeRoot.onNodeDragLeave(e, this);
       },
       onDrop(e) {
-//        console.log('drop',e);
-        this.onNodeDrop(e, this);
+        this.treeRoot.onNodeDrop(e, this);
       },
       onDragStart(e) {
-        this.onNodeDragStart(e, this);
+        this.treeRoot.onNodeDragStart(e, this);
       },
       onDragEnd(e) {
-        console.log('onDrag end');
-        this.onNodeDragEnd(e, this);
+        this.treeRoot.onNodeDragEnd(e, this);
       }
       
     },
-  };
+  }
 </script>
 <style scoped></style>
