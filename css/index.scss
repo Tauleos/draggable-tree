@@ -1,11 +1,14 @@
-$font-family: 'Chinese Quote', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol' !default;
+$font-family: "Chinese Quote", -apple-system, BlinkMacSystemFont, "Segoe UI",
+  "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue",
+  Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+  "Segoe UI Symbol" !default;
 $font-size-base: 12px !default;
 $line-height-base: 1.5 !default;
 $text-color: fade(#000, 65%) !default;
 $primary-color: #1b85ff !default;
 $primary-1: #e8f7ff !default;
 $primary-2: #bfe6ff !default;
-@import 'mixin';
+@import "mixin";
 
 $tree-prefix-cls: draggable-tree;
 $tree-title-height: 24px;
@@ -24,7 +27,8 @@ $item-hover-bg: $primary-1 !default;
   list-style: none;
   user-select: none;
 
-  ul, ol {
+  ul,
+  ol {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -127,7 +131,20 @@ $item-hover-bg: $primary-1 !default;
         }
       }
     }
-
+  }
+  &.is-drop-not-allow {
+    .#{$tree-prefix-cls}-node-content-wrapper {
+      cursor: not-allowed;
+    }
+    li {
+      &.drag-over {
+        > span[draggable="true"] {
+          background-color: white;
+          color: black;
+          opacity: 1;
+        }
+      }
+    }
   }
 
   > li {
@@ -141,11 +158,9 @@ $item-hover-bg: $primary-1 !default;
   }
 
   .c-move {
-    &-enter-active,&-leave-active {
-      transition: all .3s ease-in-out;
+    &-enter-active,
+    &-leave-active {
+      transition: all 0.3s ease-in-out;
     }
   }
 }
-
-
-

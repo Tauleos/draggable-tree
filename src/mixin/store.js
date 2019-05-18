@@ -1,21 +1,17 @@
-import { getNodeKey, normalizeNode } from '../utils';
+import { getNodeKey, normalizeNode } from "../utils";
 
 export default {
-  created () {
+  created() {
     this.treeStore = {
       seed: 0,
       nodesMap: {},
-      selectedKey: '',
-      expandedKeys: [],
+      selectedKey: "",
+      expandedKeys: []
     };
   },
   methods: {
-    normalizeNode (nodes, parent) {
-      const {
-        treeStore,
-        rowKey,
-        defaultExpandAll: expandAll,
-      } = this;
+    normalizeNode(nodes, parent) {
+      const { treeStore, rowKey, expandAll } = this;
       const { expandedKeys } = treeStore;
       const length = nodes.length;
       if (length === 0) {
@@ -26,19 +22,24 @@ export default {
         let item = nodes[i];
         const key = getNodeKey(item, rowKey, treeStore);
         const node = {
-          ...item, ...{
+          ...item,
+          ...{
+            title: item[this.props.title],
             key,
             parent,
             originNode: item.originNode || item,
-            isExpanded: expandedKeys.includes(key) || ( !!expandAll ),
+            isExpanded: expandedKeys.includes(key) || !!expandAll,
             isSelected: false,
-            dragOverGap: 'none',
-          },
+            dragOverGap: "none"
+          }
         };
         let isParent = false;
         let childNodes;
-        if (Array.isArray(item.children) && item.children.length > 0) {
-          childNodes = this.normalizeNode(item.children, node);
+        if (
+          Array.isArray(item[this.props.children]) &&
+          item[this.props.children].length > 0
+        ) {
+          childNodes = this.normalizeNode(item[this.props.children], node);
           isParent = true;
         }
         node.children = childNodes;
@@ -48,12 +49,11 @@ export default {
         list.push(node);
       }
       return list;
-      
     },
-    flattenNode (node) {
+    flattenNode(node) {
       this.treeStore.nodesMap[node.key] = node;
     },
-    setChildren (parentData, childData, index = -1) {
+    setChildren(parentData, childData, index = -1) {
       let { children } = parentData;
       if (!Array.isArray(children)) {
         children = [];
@@ -64,41 +64,42 @@ export default {
         children.splice(index, 0, childData);
       }
       parentData.children = children;
-      
     },
-    addChildren (parent, child) {
+    addChildren(parent, child) {
       this.setChildren(parent, child);
     },
-    removeChildren (parent, child) {
+    removeChildren(parent, child) {
       let { children } = parent;
       if (Array.isArray(children)) {
         parent.children = children.filter(v => v.key !== child.key);
       }
     },
-    updateStoreSelectedKeys (key) {
+    updateStoreSelectedKeys(key) {
       let oldKey = this.treeStore.selectedKey;
       if (oldKey) {
         let oldNodeData = this.treeStore.nodesMap[oldKey];
         oldNodeData.isSelected = false;
       }
       this.treeStore.selectedKey = key;
-    
     },
-    addStoreExpandKeys(node){
-      if(node.isExpanded && node.isParent) {
-        this.updateStoreExpandedKeys(node.key, 'add');
+    addStoreExpandKeys(node) {
+      if (node.isExpanded && node.isParent) {
+        this.updateStoreExpandedKeys(node.key, "add");
       }
     },
-    updateStoreExpandedKeys (key, type = 'add') {
+    updateStoreExpandedKeys(key, type = "add") {
       let { expandedKeys } = this.treeStore;
-      if (type === 'add') {
+      if (type === "add") {
         !expandedKeys.includes(key) && expandedKeys.push(key);
       } else {
         this.treeStore.expandedKeys = expandedKeys.filter(i => i === key);
       }
     },
-    getStoreExpandedKeys () {
-      return [...this.treeStore.expandedKeys];
+    clearStoreExpandedKeys() {
+      this.treeStore.expandedKeys = [];
     },
-  },
+    getStoreExpandedKeys() {
+      return [...this.treeStore.expandedKeys];
+    }
+  }
 };
