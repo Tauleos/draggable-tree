@@ -89,14 +89,15 @@ export default {
     toggleExpand() {
       this.expandAll = !this.expandAll;
     },
-    renderContent({ node }) {
+    renderContent({ node,parent }) {
       console.log(node);
       const { isShow } = this;
       return (
         
         <span style="color: green">
-          {node.title}-level-333-{node.level}
+          {node.title}
           <button onClick={()=>this.addChildren(node)}>addchildren</button>
+          <button onClick={()=>this.addnext(node,parent)}>addnext</button>
         </span>
       )
     },
@@ -116,6 +117,18 @@ export default {
         key:'test-1',
         title:'test'
       })
+    },
+    addnext(node,parent){
+      console.log(node,parent);
+      debugger;
+      if(parent) {
+        parent.push({
+          title: 'test'
+        })
+      }else{
+        this.list.push({title:'test'})
+      }
+    
     }
   }
 };

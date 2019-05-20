@@ -67,6 +67,8 @@ export default {
     },
     list:{
       handler() {
+        console.log(this.list);
+        debugger;
         this.nodes = this.normalizeNode(this.list, null, 0);
       },
       deep:true

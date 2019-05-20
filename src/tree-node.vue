@@ -67,9 +67,9 @@ export default {
         const { node } = this;
         const { originNode } = node;
         return treeRoot.renderContent ? (
-          treeRoot.renderContent({ node: originNode })
+          treeRoot.renderContent({ node: originNode,parentNode:(node.parent||{}).originNode })
         ) : treeRoot.$scopedSlots.renderContent ? (
-          treeRoot.$scopedSlots.renderContent({ node: originNode })
+          treeRoot.$scopedSlots.renderContent({ node: originNode,parentNode:(node.parent||{}).originNode })
         ) : (
           <span class="draggable-tree-title">{node.title}</span>
         );
