@@ -64,6 +64,12 @@ export default {
     expandAll() {
       this.clearStoreExpandedKeys();
       this.nodes = this.normalizeNode(this.list, null, 0);
+    },
+    list:{
+      handler() {
+        this.nodes = this.normalizeNode(this.list, null, 0);
+      },
+      deep:true
     }
   },
   created() {
