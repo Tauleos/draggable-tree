@@ -39,7 +39,7 @@ npm install draggable-tree
 
 | name          | 说明                                |
 | ------------- | ----------------------------------- |
-| renderContent | 自定义树节点的内容，参数为 { node } |
+| renderContent | 自定义树节点的内容，参数为 { node,parentNode } |
 
 # TODO
 
