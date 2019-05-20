@@ -1,5 +1,5 @@
 {
-  "name": "draggable-tree",
+  "name": "drag-tree",
   "version": "1.0.0",
   "description": "draggableTree for vue",
   "main": "dist/index.js",
