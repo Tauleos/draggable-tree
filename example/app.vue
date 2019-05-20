@@ -7,8 +7,9 @@
       :list="list"
       :props="{ title: 'key', children: 'children' }"
       :allow-drop="allowDrop"
+      :render-content="renderContent"
     >
-      <!--      <span slot="renderContent" slot-scope="{node}">testrenderContent</span>-->
+<!--            <span slot="renderContent" slot-scope="{node}">testrenderContent</span>-->
     </draggable-tree>
   </div>
 </template>
@@ -91,15 +92,13 @@ export default {
     renderContent({ node }) {
       console.log(node);
       const { isShow } = this;
-      return isShow ? (
-        <span>
-          <ux-icon type="blub" /> {node.title}-level-2222-{node.level}
-        </span>
-      ) : (
+      return (
+        
         <span style="color: green">
           {node.title}-level-333-{node.level}
+          <button onClick={()=>this.addChildren(node)}>addchildren</button>
         </span>
-      );
+      )
     },
     allowDrop(dragNode, dropNode, type) {
       // console.log(dropNode.nodeData.key,type);
@@ -110,6 +109,13 @@ export default {
     },
     onDrop(data) {
       console.log(data);
+    },
+    addChildren(node){
+      console.log(node)
+      node.children.push({
+        key:'test-1',
+        title:'test'
+      })
     }
   }
 };
