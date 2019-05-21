@@ -3,7 +3,6 @@
   "version": "1.0.2",
   "description": "draggableTree for vue",
   "main": "dist/index.js",
-  "module": "src/index.js",
   "scripts": {
     "start": "webpack-dev-server --config build/webpack.config.dev.js --hide-modules --progress",
     "test": "echo \"Error: no test specified\" && exit 1",
