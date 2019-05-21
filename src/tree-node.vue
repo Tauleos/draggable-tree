@@ -19,7 +19,7 @@
     </span>
     <c-transition>
       <ul
-        v-show="
+        v-if="
           nodeData.isExpanded && nodeData.children && nodeData.children.length
         "
         style="overflow: hidden"
@@ -67,9 +67,15 @@ export default {
         const { node } = this;
         const { originNode } = node;
         return treeRoot.renderContent ? (
-          treeRoot.renderContent({ node: originNode,parentNode:(node.parent||{}).originNode })
+          treeRoot.renderContent({
+            node: originNode,
+            parentNode: (node.parent || {}).originNode
+          })
         ) : treeRoot.$scopedSlots.renderContent ? (
-          treeRoot.$scopedSlots.renderContent({ node: originNode,parentNode:(node.parent||{}).originNode })
+          treeRoot.$scopedSlots.renderContent({
+            node: originNode,
+            parentNode: (node.parent || {}).originNode
+          })
         ) : (
           <span class="draggable-tree-title">{node.title}</span>
         );
