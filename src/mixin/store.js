@@ -10,7 +10,7 @@ export default {
     };
   },
   methods: {
-    normalizeNode (nodes, parent, level = 0) {
+    normalizeNode(nodes, parent, level = 0) {
       const { treeStore, rowKey, expandAll } = this;
       const { expandedKeys } = treeStore;
       const length = nodes.length;
@@ -18,7 +18,7 @@ export default {
         return [];
       }
       let list = [];
-      
+
       for (let i = 0; i < length; i++) {
         let item = nodes[i];
         item.level = level;
@@ -41,11 +41,14 @@ export default {
           Array.isArray(item[this.props.children]) &&
           item[this.props.children].length > 0
         ) {
-          childNodes = this.normalizeNode(item[this.props.children], node,
-            ++level);
+          childNodes = this.normalizeNode(
+            item[this.props.children],
+            node,
+            ++level
+          );
           isParent = true;
+          node.children = childNodes;
         }
-        node.children = childNodes;
         node.isParent = isParent;
         this.flattenNode(node);
         this.addStoreExpandKeys(node);
