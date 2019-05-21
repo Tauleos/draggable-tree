@@ -5,7 +5,7 @@ draggable tree for vue inspired by [Ant Design Vue](https://vue.ant.design/compo
 # use
 
 ```bash
-npm install draggable-tree
+npm install drag-tree
 
 ```
 
