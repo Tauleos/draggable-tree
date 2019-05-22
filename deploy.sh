@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 git pull
 npm run build
-git commit -am "build"
+git commit -am "$1"
 git push
-npm version $1
+npm version $2
 npm pub

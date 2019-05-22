@@ -5,11 +5,11 @@
       @drop="onDrop"
       :expand-all="expandAll"
       :list="list"
-      :props="{ title: 'key', children: 'children' }"
+      :props="{ title: 'title', children: 'children' }"
       :allow-drop="allowDrop"
       :render-content="renderContent"
     >
-<!--            <span slot="renderContent" slot-scope="{node}">testrenderContent</span>-->
+      <!--            <span slot="renderContent" slot-scope="{node}">testrenderContent</span>-->
     </draggable-tree>
   </div>
 </template>
@@ -21,11 +21,14 @@ export default {
       list: [
         {
           title: "服务发布管理",
-          children:[{
-            title:'child-1'
-          },{
-            title:'child-2'
-          }]
+          children: [
+            {
+              title: "child-1"
+            },
+            {
+              title: "child-2"
+            }
+          ]
         }
       ],
       expandAll: true
@@ -35,17 +38,16 @@ export default {
     toggleExpand() {
       this.expandAll = !this.expandAll;
     },
-    renderContent({ node,parent }) {
+    renderContent({ node, parent }) {
       console.log(node);
       const { isShow } = this;
       return (
-        
         <span style="color: green">
           {node.title}
-          <button onClick={()=>this.addChildren(node)}>addchildren</button>
-          <button onClick={()=>this.addnext(node,parent)}>addnext</button>
+          <button onClick={() => this.addChildren(node)}>addchildren</button>
+          <button onClick={() => this.addnext(node, parent)}>addnext</button>
         </span>
-      )
+      );
     },
     allowDrop(dragNode, dropNode, type) {
       // console.log(dropNode.nodeData.key,type);
@@ -55,29 +57,28 @@ export default {
       return true;
     },
     onDrop(data) {
-//      console.log(data);
+      //      console.log(data);
     },
-    addChildren(node){
-      console.log(node)
-      if(!node.children){
-        this.$set(node,'children',[])
+    addChildren(node) {
+      console.log(node);
+      if (!node.children) {
+        this.$set(node, "children", []);
       }
       node.children.push({
-        key:'test-1',
-        title:'test'
-      })
+        key: "test-1",
+        title: "test"
+      });
     },
-    addnext(node,parent){
-      console.log(node,parent);
+    addnext(node, parent) {
+      console.log(node, parent);
       debugger;
-      if(parent) {
+      if (parent) {
         parent.push({
-          title: 'test'
-        })
-      }else{
-        this.list.push({title:'test'})
+          title: "test"
+        });
+      } else {
+        this.list.push({ title: "test" });
       }
-    
     }
   }
 };

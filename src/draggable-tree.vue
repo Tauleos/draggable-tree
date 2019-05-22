@@ -65,13 +65,13 @@ export default {
       this.clearStoreExpandedKeys();
       this.nodes = this.normalizeNode(this.list, null, 0);
     },
-    list:{
+    list: {
       handler() {
         console.log(this.list);
         debugger;
         this.nodes = this.normalizeNode(this.list, null, 0);
       },
-      deep:true
+      deep: true
     }
   },
   created() {
@@ -118,9 +118,26 @@ export default {
       this.dragState.dropPosition = position;
       treeNode.nodeData.dragOverGap = this.dragState.dropPosition;
     },
+    dropInSelf(dropNode) {
+      let { dragNode } = this.dragState;
+      let parent = dropNode.nodeData.parent;
+      while (parent) {
+        if (parent.key === dragNode.nodeData.key) {
+          return true;
+        } else {
+          parent = parent.nodeData.parent;
+        }
+      }
+      return false;
+    },
     onNodeDrop(e, dropNode) {
-      let treeData = this.nodes.map(v => v); //目测是浅拷贝
       let { dragNode, dropPosition } = this.dragState;
+      if (this.dropInSelf(dropNode)) {
+        return;
+      }
+
+      let treeData = this.nodes.map(v => v.originNode); //获取原始数据
+
       let { nodeData: dragData } = dragNode;
       //let dragData = this.dragState.dragNode.nodeData;
       let dragParentData = dragNode.nodeData.parent;
@@ -170,11 +187,12 @@ export default {
       });
     },
     onNodeDragStart(event, treeNode) {
-      console.log('drag start',treeNode);
+      console.log("drag start", treeNode);
       this.dragState.dragNode = treeNode;
     },
     onNodeDragEnd(e) {
       console.log("on end", this.dragState);
+      this.clearDragOverGap(this.dragState.dragOverNode);
       e.dataTransfer.dropEffect = "move";
       this.dragState.dragNode = null;
       this.dragState.dropPosition = "";
