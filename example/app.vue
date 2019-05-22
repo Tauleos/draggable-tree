@@ -20,7 +20,12 @@ export default {
     return {
       list: [
         {
-          title: "服务发布管理"
+          title: "服务发布管理",
+          children:[{
+            title:'child-1'
+          },{
+            title:'child-2'
+          }]
         }
       ],
       expandAll: true
@@ -50,10 +55,13 @@ export default {
       return true;
     },
     onDrop(data) {
-      console.log(data);
+//      console.log(data);
     },
     addChildren(node){
       console.log(node)
+      if(!node.children){
+        this.$set(node,'children',[])
+      }
       node.children.push({
         key:'test-1',
         title:'test'

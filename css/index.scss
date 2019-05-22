@@ -40,25 +40,17 @@ $item-hover-bg: $primary-1 !default;
     list-style: none;
     white-space: nowrap;
     outline: 0;
+    /* Required to make elements draggable in old WebKit */
+    -khtml-user-drag: element;
+    -webkit-user-drag: element;
 
     ul {
       margin: 0;
       padding: 0 0 0 $tree-child-padding;
     }
 
-    span[draggable="true"] {
-      user-select: none;
-      border-top: 2px transparent solid;
-      border-bottom: 2px transparent solid;
-      /* Required to make elements draggable in old WebKit */
-      -khtml-user-drag: element;
-      -webkit-user-drag: element;
-
-      line-height: $tree-title-height - 4px;
-    }
-
     &.drag-over {
-      > span[draggable="true"] {
+      > .#{$tree-prefix-cls}-node-content-wrapper{
         background-color: $primary-color;
         color: white;
         opacity: 0.8;
@@ -66,13 +58,13 @@ $item-hover-bg: $primary-1 !default;
     }
 
     &.drag-over-gap-top {
-      > span[draggable="true"] {
+      > .#{$tree-prefix-cls}-node-content-wrapper {
         border-top-color: $primary-color;
       }
     }
 
     &.drag-over-gap-bottom {
-      > span[draggable="true"] {
+      > .#{$tree-prefix-cls}-node-content-wrapper {
         border-bottom-color: $primary-color;
       }
     }
@@ -90,6 +82,9 @@ $item-hover-bg: $primary-1 !default;
       height: $tree-title-height;
       line-height: $tree-title-height;
       width: calc(100% - 24px);
+      user-select: none;
+      border-top: 2px transparent solid;
+      border-bottom: 2px transparent solid;
 
       &:hover {
         background-color: $item-hover-bg;
