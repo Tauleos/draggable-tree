@@ -77,7 +77,7 @@ export default {
     removeChildren(parent, child) {
       let { children } = parent;
       if (Array.isArray(children)) {
-        parent.children = children.filter(v => v.key !== child.key);
+        parent.children = children.filter(v => v !== child);
       }
     },
     updateStoreSelectedKeys(key) {

@@ -66,10 +66,10 @@ export default {
       this.nodes = this.normalizeNode(this.list, null, 0);
     },
     list: {
-      handler() {
-        console.log(this.list);
+      handler(nVal) {
+        console.log("in watch", nVal);
         debugger;
-        this.nodes = this.normalizeNode(this.list, null, 0);
+        this.nodes = this.normalizeNode(nVal, null, 0);
       },
       deep: true
     }
@@ -107,8 +107,14 @@ export default {
       let allow = true;
       if (typeof this.allowDrop === "function") {
         allow = this.allowDrop(
-          dragNode.nodeData.originNode,
-          treeNode.nodeData.originNode,
+          {
+            node: dragNode.nodeData.originNode,
+            parentNode: (dragNode.nodeData.parent || {}).originNode
+          },
+          {
+            node: treeNode.nodeData.originNode,
+            parentNode: (treeNode.nodeData.parent || {}).originNode
+          },
           position
         );
       }
@@ -125,7 +131,7 @@ export default {
         if (parent.key === dragNode.nodeData.key) {
           return true;
         } else {
-          parent = parent.nodeData.parent;
+          parent = parent.parent;
         }
       }
       return false;
@@ -140,9 +146,9 @@ export default {
 
       let { nodeData: dragData } = dragNode;
       //let dragData = this.dragState.dragNode.nodeData;
-      let dragParentData = dragNode.nodeData.parent;
-      if (!dragParentData) {
-        Object.defineProperty((dragParentData = {}), "children", {
+      let dragParentData = {};
+      if (!dragData.parent) {
+        Object.defineProperty(dragParentData, "children", {
           get: function() {
             return treeData;
           },
@@ -150,11 +156,13 @@ export default {
             treeData = childs;
           }
         });
+      } else {
+        dragParentData = dragData.parent.originNode;
       }
       let dropData = dropNode.nodeData;
-      let dropParentData = dropData.parent;
-      if (!dropParentData) {
-        Object.defineProperty((dropParentData = {}), "children", {
+      let dropParentData = {};
+      if (!dropData.parent) {
+        Object.defineProperty(dropParentData, "children", {
           get: function() {
             return treeData;
           },
@@ -162,29 +170,33 @@ export default {
             treeData = childs;
           }
         });
+      } else {
+        dropParentData = dropData.parent.originNode;
       }
-
-      if (dragData.key !== dropData.key) {
+      let dragOriginNode = dragData.originNode;
+      let dropOriginNode = dropData.originNode;
+      if (dragOriginNode !== dropOriginNode) {
         //把拖拽元素从父节点中删除
-        this.removeChildren(dragParentData, dragData);
+        this.removeChildren(dragParentData, dragOriginNode);
         if (dropPosition === "mid") {
-          this.addChildren(dropData, dragData);
+          this.addChildren(dropOriginNode, dragOriginNode);
         } else {
-          let index = dropParentData.children.indexOf(dropData);
+          let index = dropParentData.children.indexOf(dropOriginNode);
           this.setChildren(
             dropParentData,
-            dragData,
+            dragOriginNode,
             dropPosition === "top" ? index : index + 1
           );
         }
       }
+      this.$emit("input", treeData);
       this.nodes = this.normalizeNode(treeData, null);
-      this.$emit("drop", {
-        dragNode: dragData.originNode,
-        dragNodeParent: dragData.parent,
-        dropNode: dropData.originNode,
-        dropNodeParent: dropData.parent
-      });
+      this.$emit(
+        "drop",
+        { dragNode: dragData.originNode, dragParentNode: dragData.parent },
+        { dropNode: dropData.originNode, dropParentNode: dropData.parent },
+        dropPosition
+      );
     },
     onNodeDragStart(event, treeNode) {
       console.log("drag start", treeNode);

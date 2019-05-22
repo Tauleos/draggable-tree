@@ -4,7 +4,7 @@
     <draggable-tree
       @drop="onDrop"
       :expand-all="expandAll"
-      :list="list"
+      v-model="list"
       :props="{ title: 'title', children: 'children' }"
       :allow-drop="allowDrop"
       :render-content="renderContent"
@@ -39,7 +39,7 @@ export default {
       this.expandAll = !this.expandAll;
     },
     renderContent({ node, parent }) {
-      console.log(node);
+      // console.log(node);
       const { isShow } = this;
       return (
         <span style="color: green">
@@ -49,18 +49,18 @@ export default {
         </span>
       );
     },
-    allowDrop(dragNode, dropNode, type) {
-      // console.log(dropNode.nodeData.key,type);
-      if (dropNode.key === "mpadmin_M_04_02_02") {
-        return type !== "mid";
-      }
+    allowDrop(dragNode, overNode, type) {
+      console.log(dragNode, overNode, type);
+      // if (dropNode.key === "mpadmin_M_04_02_02") {
+      //   return type !== "mid";
+      // }
       return true;
     },
     onDrop(data) {
       //      console.log(data);
     },
     addChildren(node) {
-      console.log(node);
+      // console.log(node);
       if (!node.children) {
         this.$set(node, "children", []);
       }
@@ -70,7 +70,7 @@ export default {
       });
     },
     addnext(node, parent) {
-      console.log(node, parent);
+      // console.log(node, parent);
       debugger;
       if (parent) {
         parent.push({
