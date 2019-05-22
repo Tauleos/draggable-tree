@@ -4,15 +4,16 @@
     @dragenter.prevent.stop="onDragEnter"
     @dragleave.stop="onDragLeave"
     @drop.stop="onDrop"
+    @dragstart.stop="onDragStart"
+    @dragend.stop="onDragEnd"
     :class="classes"
+    draggable="true"
   >
     <span :class="switcherClasses" @click="onExpand"></span>
     <span
       ref="selector"
       :class="selectorClasses"
-      draggable="true"
-      @dragstart.stop="onDragStart"
-      @dragend.stop="onDragEnd"
+      
       @click.stop="onSelect"
     >
       <node-content :node="nodeData" />

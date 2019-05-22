@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './app.vue'
-import draggableTree from '../dist/index';
+import draggableTree from '../src/index';
 
 Vue.use(draggableTree);
 new Vue({

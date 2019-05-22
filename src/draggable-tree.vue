@@ -170,6 +170,7 @@ export default {
       });
     },
     onNodeDragStart(event, treeNode) {
+      console.log('drag start',treeNode);
       this.dragState.dragNode = treeNode;
     },
     onNodeDragEnd(e) {
