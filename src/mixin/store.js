@@ -44,7 +44,7 @@ export default {
           childNodes = this.normalizeNode(
             item[this.props.children],
             node,
-            ++level
+            level + 1
           );
           isParent = true;
           node.children = childNodes;

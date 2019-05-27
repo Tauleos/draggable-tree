@@ -20,15 +20,19 @@ export default {
     return {
       list: [
         {
-          title: "服务发布管理",
-          children: [
-            {
-              title: "child-1"
-            },
-            {
-              title: "child-2"
-            }
-          ]
+          title: "1管理"
+        },
+        {
+          title: "2管理"
+        },
+        {
+          title: "3管理"
+        },
+        {
+          title: "4管理"
+        },
+        {
+          title: "5管理"
         }
       ],
       expandAll: true
@@ -71,13 +75,20 @@ export default {
     },
     addnext(node, parent) {
       // console.log(node, parent);
-      debugger;
       if (parent) {
-        parent.push({
+        let idx = parent.indexOf(node);
+        parent.splice(idx, 0, {
           title: "test"
         });
+        //        parent.push({
+        //          title: "test"
+        //        });
       } else {
-        this.list.push({ title: "test" });
+        let idx = this.list.indexOf(node);
+        this.list.splice(idx + 1, 0, {
+          title: "test"
+        });
+        //        this.list.push({ title: "test" });
       }
     }
   }
