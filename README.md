@@ -20,6 +20,8 @@ npm install drag-tree
 | render-content | 树节点的内容区的渲染 Function                                                                                                           | Function({node}                                                    | -      |
 | expand-all     | 是否展开所有节点                                                                                                                        | boolean                                                            | true   |
 | allow-drop     | 拖拽时判定目标节点能否被放置。type 参数有三种情况：'top'、'mid' 和 'bottom'，分别表示放置在目标节点前、插入至目标节点和放置在目标节点后 | Function(dragNode:{node,parent}, dragOverNode:{node,parent}, type) | -      |
+| rowKey         | 每条数据的主键                                                                                                                          | String                                                             |
+| selectedKey    | 当前选中的节点 key                                                                                                                      | String                                                             |
 
 ## Props
 

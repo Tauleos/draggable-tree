@@ -45,6 +45,8 @@ export default {
         };
       }
     },
+    rowKey: String,
+    selectedKey: String,
     allowDrop: Function
   },
   components: { treeNode },
@@ -63,6 +65,9 @@ export default {
   watch: {
     expandAll() {
       this.clearStoreExpandedKeys();
+      this.nodes = this.normalizeNode(this.list, null, 0);
+    },
+    selectedKey() {
       this.nodes = this.normalizeNode(this.list, null, 0);
     },
     list: {

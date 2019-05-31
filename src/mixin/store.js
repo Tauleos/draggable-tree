@@ -11,9 +11,10 @@ export default {
   },
   methods: {
     normalizeNode(nodes, parent, level = 0) {
-      const { treeStore, rowKey, expandAll } = this;
+      const { treeStore, rowKey, expandAll, selectedKey } = this;
       const { expandedKeys } = treeStore;
       const length = nodes.length;
+      this.treeStore.selectedKey = selectedKey;
       if (length === 0) {
         return [];
       }
@@ -31,7 +32,7 @@ export default {
             parent,
             originNode: item.originNode || item,
             isExpanded: expandedKeys.includes(key) || !!expandAll,
-            isSelected: false,
+            isSelected: !!selectedKey ? selectedKey === key : false,
             dragOverGap: "none"
           }
         };
