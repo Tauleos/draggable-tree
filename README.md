@@ -1,5 +1,7 @@
 # draggable-tree
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/Tauleos/draggable-tree.svg)](https://greenkeeper.io/)
+
 draggable tree for vue inspired by [Ant Design Vue](https://vue.ant.design/components/tree-cn/#API) and [Element](https://element.eleme.cn/#/zh-CN/component/tree)
 
 # use
