@@ -10,12 +10,7 @@
     draggable="true"
   >
     <span :class="switcherClasses" @click="onExpand"></span>
-    <span
-      ref="selector"
-      :class="selectorClasses"
-      
-      @click.stop="onSelect"
-    >
+    <span ref="selector" :class="selectorClasses" @click.stop="onSelect">
       <node-content :node="nodeData" />
     </span>
     <c-transition>
@@ -156,6 +151,12 @@ export default {
       this.treeRoot.onNodeDrop(e, this);
     },
     onDragStart(e) {
+      try {
+        // firefox drag bug
+        e.dataTransfer.setData("text/plain", "");
+      } catch (err) {
+        // empty
+      }
       this.treeRoot.onNodeDragStart(e, this);
     },
     onDragEnd(e) {
