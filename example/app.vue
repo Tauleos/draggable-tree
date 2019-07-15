@@ -11,6 +11,7 @@
       :props="{ title: 'title', children: 'children' }"
       :allow-drop="allowDrop"
       :render-content="renderContent"
+      @select="onSelect"
     >
       <!--            <span slot="renderContent" slot-scope="{node}">testrenderContent</span>-->
     </draggable-tree>
@@ -25,25 +26,56 @@ export default {
       list: [
         {
           menuId: "1",
-          title: "1管理"
+          title: "1管理",
+          children: [
+            {
+              menuId: "1-1",
+              title: "1-1管理"
+            },
+            {
+              menuId: "1-2",
+              title: "1-12管理"
+            },
+            {
+              menuId: "1-13",
+              title: "1-13管理"
+            }
+          ]
         },
         {
           menuId: "2",
-          title: "2管理"
-        },
-        {
-          menuId: "3",
-          title: "3管理"
-        },
-        {
-          title: "4管理"
-        },
-        {
-          title: "5管理"
+          title: "2管理",
+          children: [
+            {
+              menuId: "2-1",
+              title: "2-1管理"
+            },
+            {
+              menuId: "2-2",
+              title: "2-12管理"
+            },
+            {
+              menuId: "2-13",
+              title: "2-13管理"
+            }
+          ]
         }
+        //        {
+        //          menuId: "3",
+        //          title: "3管理"
+        //        },
+        //        {
+        //          title: "4管理"
+        //        },
+        //        {
+        //          title: "5管理"
+        //        }
       ],
       expandAll: true
     };
+  },
+  created() {
+    console.log(_dfp);
   },
   methods: {
     toggleExpand() {
@@ -100,6 +132,10 @@ export default {
         });
         //        this.list.push({ title: "test" });
       }
+    },
+    onSelect(node) {
+      console.log("select", node);
+      this.selectedKey = node.menuId;
     }
   }
 };

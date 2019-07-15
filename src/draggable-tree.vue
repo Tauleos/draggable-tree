@@ -67,9 +67,6 @@ export default {
       this.clearStoreExpandedKeys();
       this.nodes = this.normalizeNode(this.list, null, 0);
     },
-    selectedKey() {
-      this.nodes = this.normalizeNode(this.list, null, 0);
-    },
     list: {
       handler(nVal) {
         console.log("in watch", nVal);
