@@ -32,6 +32,12 @@ export default {
       type: Boolean,
       default: true
     },
+    expandKeys: {
+      type: Array,
+      default() {
+        return [];
+      }
+    },
     renderContent: {
       type: Function
     },
@@ -66,6 +72,9 @@ export default {
     expandAll() {
       this.clearStoreExpandedKeys();
       this.nodes = this.normalizeNode(this.list, null, 0);
+    },
+    selectedKey(nVal, oVal) {
+      this.updateStoreSelectedKeys(nVal);
     },
     list: {
       handler(nVal) {
