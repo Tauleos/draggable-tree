@@ -1,7 +1,7 @@
 <template>
   <div class="app">
-    <button @click="toggleExpand">toogle</button>
-    <button @click="toggleSelected">toogle</button>
+    <button @click="toggleExpand">toggle</button>
+    <button @click="toggleSelected">toggle</button>
     <draggable-tree
       @drop="onDrop"
       :expand-all="expandAll"
