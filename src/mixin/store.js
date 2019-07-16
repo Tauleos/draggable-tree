@@ -83,11 +83,13 @@ export default {
     },
     updateStoreSelectedKeys(key) {
       let oldKey = this.treeStore.selectedKey;
-      if (oldKey) {
+      if (oldKey && oldKey !== key) {
         let oldNodeData = this.treeStore.nodesMap[oldKey];
         oldNodeData.isSelected = false;
       }
       this.treeStore.selectedKey = key;
+      //      this.resetStoreKeys('selectedKey');
+      this.treeStore.nodesMap[key].isSelected = true;
     },
     addStoreExpandKeys(node) {
       if (node.isExpanded && node.isParent) {
@@ -99,7 +101,7 @@ export default {
       if (type === "add") {
         !expandedKeys.includes(key) && expandedKeys.push(key);
       } else {
-        this.treeStore.expandedKeys = expandedKeys.filter(i => i === key);
+        this.treeStore.expandedKeys = expandedKeys.filter(i => i !== key);
       }
     },
     clearStoreExpandedKeys() {

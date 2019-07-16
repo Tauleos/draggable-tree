@@ -2,9 +2,10 @@
   <div class="app">
     <button @click="toggleExpand">toggle</button>
     <button @click="toggleSelected">toggle</button>
+    <button @click="setSelected">setSelected</button>
     <draggable-tree
       @drop="onDrop"
-      :expand-all="expandAll"
+      :expand-keys="expandKeys"
       v-model="list"
       rowKey="menuId"
       :selected-key="selectedKey"
@@ -23,6 +24,7 @@ export default {
   data() {
     return {
       selectedKey: "1",
+      expandKeys: ["1", "2"],
       list: [
         {
           menuId: "1",
@@ -74,15 +76,16 @@ export default {
       expandAll: true
     };
   },
-  created() {
-    console.log(_dfp);
-  },
+  created() {},
   methods: {
     toggleExpand() {
       this.expandAll = !this.expandAll;
     },
     toggleSelected() {
       this.selectedKey = String(++this.selectedKey);
+    },
+    setSelected() {
+      this.selectedKey = "2";
     },
     renderContent({ node, parent }) {
       // console.log(node);
