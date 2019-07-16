@@ -78,7 +78,7 @@ export default {
   created() {},
   methods: {
     toggleExpand() {
-      this.expandKeys = ["1", "2"];
+      this.expandKeys = [];
     },
     toggleSelected() {
       this.selectedKey = String(++this.selectedKey);
