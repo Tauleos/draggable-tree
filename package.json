@@ -1,6 +1,6 @@
 {
   "name": "drag-tree",
-  "version": "1.1.2-alpha.1",
+  "version": "1.1.2-alpha.2",
   "description": "draggableTree for vue",
   "main": "dist/index.js",
   "scripts": {
