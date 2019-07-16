@@ -28,11 +28,11 @@ export default {
       required: true,
       type: Array
     },
-    expandAll: {
+    defaultExpandAll: {
       type: Boolean,
       default: true
     },
-    expandKeys: {
+    expandedKeys: {
       type: Array,
       default() {
         return [];
@@ -69,9 +69,8 @@ export default {
     };
   },
   watch: {
-    expandAll() {
-      this.clearStoreExpandedKeys();
-      this.nodes = this.normalizeNode(this.list, null, 0);
+    expandedKeys() {
+      this.updateStoreExpandedKeys(this.expandedKeys, null, true);
     },
     selectedKey(nVal, oVal) {
       this.updateStoreSelectedKeys(nVal);
@@ -80,12 +79,13 @@ export default {
       handler(nVal) {
         console.log("in watch", nVal);
         debugger;
-        this.nodes = this.normalizeNode(nVal, null, 0);
+        this.nodes = this.normalizeNode(nVal, null, 0, "change");
       },
       deep: true
     }
   },
   created() {
+    this.updateStoreExpandedKeys(this.expandedKeys, null, true);
     this.nodes = this.normalizeNode(this.list, null, 0);
   },
   computed: {
@@ -107,7 +107,8 @@ export default {
       this.updateStoreExpandedKeys(key, isExpanded ? "add" : "del");
       this.$emit("expand", this.getStoreExpandedKeys(), {
         expanded: isExpanded,
-        domEvent: e
+        node: { ...nodeData.originNode },
+        e
       });
     },
     onNodeDragOver(e, treeNode) {

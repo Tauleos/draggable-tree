@@ -1,11 +1,11 @@
 <template>
   <div class="app">
-    <button @click="toggleExpand">toggle</button>
-    <button @click="toggleSelected">toggle</button>
+    <button @click="toggleExpand">toggleExpand</button>
     <button @click="setSelected">setSelected</button>
     <draggable-tree
       @drop="onDrop"
-      :expand-keys="expandKeys"
+      :expanded-keys="expandKeys"
+      :default-expand-all="false"
       v-model="list"
       rowKey="menuId"
       :selected-key="selectedKey"
@@ -24,7 +24,7 @@ export default {
   data() {
     return {
       selectedKey: "1",
-      expandKeys: ["1", "2"],
+      expandKeys: ["1"],
       list: [
         {
           menuId: "1",
@@ -72,14 +72,13 @@ export default {
         //        {
         //          title: "5管理"
         //        }
-      ],
-      expandAll: true
+      ]
     };
   },
   created() {},
   methods: {
     toggleExpand() {
-      this.expandAll = !this.expandAll;
+      this.expandKeys = ["1", "2"];
     },
     toggleSelected() {
       this.selectedKey = String(++this.selectedKey);
@@ -87,14 +86,14 @@ export default {
     setSelected() {
       this.selectedKey = "2";
     },
-    renderContent({ node, parent }) {
-      // console.log(node);
+    renderContent({ node, parentNode }) {
+      console.log("in render", node, parentNode);
       const { isShow } = this;
       return (
         <span style="color: green">
           {node.title}
           <button onClick={() => this.addChildren(node)}>addchildren</button>
-          <button onClick={() => this.addnext(node, parent)}>addnext</button>
+          <button onClick={e => this.addnext(node, parentNode)}>addnext</button>
         </span>
       );
     },
@@ -114,15 +113,15 @@ export default {
         this.$set(node, "children", []);
       }
       node.children.push({
-        key: "test-1",
+        menuId: "test-1",
         title: "test"
       });
     },
     addnext(node, parent) {
-      // console.log(node, parent);
+      console.log(node, parent);
       if (parent) {
-        let idx = parent.indexOf(node);
-        parent.splice(idx, 0, {
+        let idx = parent.children.indexOf(node);
+        parent.children.splice(idx, 0, {
           title: "test"
         });
         //        parent.push({
