@@ -10,8 +10,8 @@ export default {
     };
   },
   methods: {
-    normalizeNode(nodes, parent, level = 0) {
-      const { treeStore, rowKey, expandAll, selectedKey } = this;
+    normalizeNode(nodes, parent, level = 0, from = "init") {
+      const { treeStore, rowKey, defaultExpandAll, selectedKey } = this;
       const { expandedKeys } = treeStore;
       const length = nodes.length;
       this.treeStore.selectedKey = selectedKey;
@@ -31,7 +31,10 @@ export default {
             key,
             parent,
             originNode: item.originNode || item,
-            isExpanded: expandedKeys.includes(key) || !!expandAll,
+            isExpanded:
+              expandedKeys.includes(key) ||
+              //              expandAll,
+              (from === "init" ? !!defaultExpandAll : false),
             isSelected: !!selectedKey ? selectedKey === key : false,
             dragOverGap: "none"
           }
@@ -45,7 +48,8 @@ export default {
           childNodes = this.normalizeNode(
             item[this.props.children],
             node,
-            level + 1
+            level + 1,
+            from
           );
           isParent = true;
           node.children = childNodes;
@@ -89,19 +93,28 @@ export default {
       }
       this.treeStore.selectedKey = key;
       //      this.resetStoreKeys('selectedKey');
-      this.treeStore.nodesMap[key].isSelected = true;
+      this.treeStore.nodesMap[key] &&
+        (this.treeStore.nodesMap[key].isSelected = true);
     },
     addStoreExpandKeys(node) {
       if (node.isExpanded && node.isParent) {
         this.updateStoreExpandedKeys(node.key, "add");
       }
     },
-    updateStoreExpandedKeys(key, type = "add") {
+    updateStoreExpandedKeys(key, type = "add", replace = false) {
       let { expandedKeys } = this.treeStore;
+      let resetFunc = this.resetStoreKeys("isExpanded");
+      if (replace) {
+        this.treeStore.expandedKeys = key;
+        resetFunc(expandedKeys, key);
+        return;
+      }
       if (type === "add") {
         !expandedKeys.includes(key) && expandedKeys.push(key);
+        resetFunc([], expandedKeys);
       } else {
         this.treeStore.expandedKeys = expandedKeys.filter(i => i !== key);
+        resetFunc(this.treeStore.expandedKeys, []);
       }
     },
     clearStoreExpandedKeys() {
@@ -109,6 +122,23 @@ export default {
     },
     getStoreExpandedKeys() {
       return [...this.treeStore.expandedKeys];
+    },
+    resetStoreKeys(keyName) {
+      return (oldKey = [], newKey = []) => {
+        for (let i of oldKey) {
+          let node = this.treeStore.nodesMap[i];
+          if (node) {
+            node[keyName] = false;
+          }
+        }
+        for (let i of newKey) {
+          console.log("newKey", i);
+          let node = this.treeStore.nodesMap[i];
+          if (node) {
+            node[keyName] = true;
+          }
+        }
+      };
     }
   }
 };
