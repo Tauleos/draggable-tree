@@ -34,7 +34,7 @@ module.exports = merge(webpackBaseConfig, {
       inject: true,
       filename: "index.html",
       template: path.join(__dirname, "../example/index.html")
-    })
+    }),
     // new BundleAnalyzerPlugin()
   ],
   devServer: {

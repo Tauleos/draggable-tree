@@ -1,6 +1,6 @@
 const path = require('path');
-const webpack = require('webpack');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 module.exports = {
   mode:'production',
   entry: './src/index.js',
@@ -15,7 +15,7 @@ module.exports = {
         loader: 'babel-loader',
         options: {
           presets: ['@babel/preset-env'],
-          plugins: ['transform-vue-jsx'],
+          plugins: ['transform-vue-jsx','syntax-dynamic-import','minify-dead-code-elimination'],
         },
         exclude: /node-modules/,
       },
@@ -49,6 +49,9 @@ module.exports = {
         },
       },
     ],
+  },
+  optimization: {
+    minimizer: [new UglifyJsPlugin()]
   },
   plugins: [
     new VueLoaderPlugin(),
