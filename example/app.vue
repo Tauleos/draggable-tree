@@ -13,6 +13,7 @@
       :allow-drop="allowDrop"
       :render-content="renderContent"
       @select="onSelect"
+      @expand="onExpand"
     >
       <!--            <span slot="renderContent" slot-scope="{node}">testrenderContent</span>-->
     </draggable-tree>
@@ -138,6 +139,9 @@ export default {
     onSelect(node) {
       console.log("select", node);
       this.selectedKey = node.menuId;
+    },
+    onExpand(keys) {
+      this.expandKeys = keys;
     }
   }
 };
